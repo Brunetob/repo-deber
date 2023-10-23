@@ -48,7 +48,7 @@ class LevelsController {
     //GET BY ID Clase Controller
     @GetMapping("/{id}")
     fun listById (@PathVariable("id") id: Long): ResponseEntity<*>{
-        return ResponseEntity(modeloService.listById (id), HttpStatus.ACCEPTED)
+        return ResponseEntity(modeloService.listById (id), HttpStatus.OK)
 
     }
 }
