@@ -64,4 +64,8 @@ class LevelsService {
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
     }
+    //GET BY ID clase service
+    fun listById (id:Long?):LevelsModel?{
+        return modeloRepository.findById(id)
+    }
 }

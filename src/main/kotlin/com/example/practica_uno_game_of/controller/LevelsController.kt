@@ -45,4 +45,10 @@ class LevelsController {
     fun delete (@PathVariable("id") id: Long):Boolean?{
         return modeloService.delete(id)
     }
+    //GET BY ID Clase Controller
+    @GetMapping("/{id}")
+    fun listById (@PathVariable("id") id: Long): ResponseEntity<*>{
+        return ResponseEntity(modeloService.listById (id), HttpStatus.OK)
+
+    }
 }
