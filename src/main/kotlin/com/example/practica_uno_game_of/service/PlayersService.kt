@@ -24,7 +24,7 @@ class PlayersService {
         //Comprobación de la clave foranea
         try {
             playersRepository.findById(players.levels_id)
-                ?: throw Exception("Id del cliente no encontrada")
+                ?: throw Exception("Id del cliente no encontradaa")
             return playersRepository.save(players)
         }catch (ex : Exception){
             throw ResponseStatusException(
