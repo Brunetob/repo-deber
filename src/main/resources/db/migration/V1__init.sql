@@ -10,6 +10,5 @@ CREATE TABLE IF NOT EXISTS players (
     id SERIAL PRIMARY KEY,
     Pl_name VARCHAR(10),
     Pl_lifes INT,
-    Lvl_name VARCHAR(20),
     levels_id INT REFERENCES levels(id)
     );
