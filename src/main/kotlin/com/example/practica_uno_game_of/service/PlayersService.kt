@@ -13,7 +13,7 @@ class PlayersService {
     @Autowired
     lateinit var playersRepository: PlayersRepository
     @Autowired//primera tabla inyección
-    lateinit var modelFirstTableRepository: LevelsRepository
+    lateinit var levelsRepository: LevelsRepository
 
     fun list ():List<Players>{
         return playersRepository.findAll()
@@ -23,19 +23,12 @@ class PlayersService {
     fun save(players: Players): Players {
         //Comprobación de la clave foranea
         try {
-            playersRepository.findById(players.levels_id)
+            levelsRepository.findById(players.levels_id)
                 ?: throw Exception("Id del cliente no encontradaa")
             return playersRepository.save(players)
         }catch (ex : Exception){
-            throw ResponseStatusException(
-                HttpStatus.NOT_FOUND, ex.message, ex)
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, ex.message, ex)
         }
-        /*try{
-            return playersRepository.save(modelo)
-        }
-        catch (ex:Exception){
-            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
-        }*/
     }
     //clase service -Petición put
     fun update(modelo: Players): Players {
@@ -49,20 +42,6 @@ class PlayersService {
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
     }
-    /*clase service - Peticiones patch
-    fun updateName(modelo:LevelsModel): LevelsModel{
-        try{
-            val response = modeloRepository.findById(modelo.id)
-                ?: throw Exception("ID no existe")
-            response.apply {
-                fullname=modelo.fullname //un atributo del modelo
-            }
-            return modeloRepository.save(response)
-        }
-        catch (ex:Exception){
-            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
-        }
-    }*/
     //clase service - Delete by id
     fun delete (id: Long?):Boolean?{
         try{
