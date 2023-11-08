@@ -18,40 +18,49 @@ class LevelsService {
     }
     //PETICIONES POST
     //clase service
-    fun save(modelo: LevelsModel): LevelsModel{
+    fun save(levelsModel: LevelsModel): LevelsModel{
         try{
-            return modeloRepository.save(modelo)
+            //validaciones
+            levelsModel.id?.takeIf { it > 0}
+                ?:throw ResponseStatusException(HttpStatus.BAD_REQUEST, "El id no debe ser nulo")
+            levelsModel.levelName?.takeIf { it.trim().isNotEmpty()}
+                ?:throw ResponseStatusException(HttpStatus.BAD_REQUEST, "El título de la conferencia no debe ser nulo")
+            levelsModel.Lvl_number?.takeIf {it > 0}
+                ?:throw ResponseStatusException(HttpStatus.BAD_REQUEST, "El numero de nivel no debe ser nulo")
+            levelsModel.levelDifficulty?.takeIf { it.trim().isNotEmpty()}
+                ?:throw ResponseStatusException(HttpStatus.BAD_REQUEST, "El título de la conferencia no debe ser nulo")
+            return modeloRepository.save(levelsModel)
         }
         catch (ex:Exception){
-            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST,ex.message)
         }
     }
     //clase service -Petición put
-    fun update(modelo: LevelsModel): LevelsModel{
+    fun update(levelsModel: LevelsModel): LevelsModel{
         try {
-            modeloRepository.findById(modelo.id)
+            modeloRepository.findById(levelsModel.id)
                 ?: throw Exception("ID no existe")
 
-            return modeloRepository.save(modelo)
+            return modeloRepository.save(levelsModel)
         }
         catch (ex:Exception){
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
     }
-    /*clase service - Peticiones patch
-    fun updateName(modelo:LevelsModel): LevelsModel{
+    /*clase service - Peticiones patch*/
+    fun updateName(levelsModel: LevelsModel): LevelsModel{
         try{
-            val response = modeloRepository.findById(modelo.id)
+            val response = modeloRepository.findById(levelsModel.id)
                 ?: throw Exception("ID no existe")
             response.apply {
-                fullname=modelo.fullname //un atributo del modelo
+                levelName=levelsModel.levelName //un atributo del modelo
             }
             return modeloRepository.save(response)
         }
         catch (ex:Exception){
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
-    }*/
+    }
     //clase service - Delete by id
     fun delete (id: Long?):Boolean?{
         try{

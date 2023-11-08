@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*
 @Controller
 @RestController
 @RequestMapping("/Players")   //endpoint
+
+@CrossOrigin(methods = [RequestMethod.GET, RequestMethod.POST, RequestMethod.PATCH, RequestMethod.PUT, RequestMethod.DELETE])
+
 class PlayersController {
     @Autowired
     lateinit var playersService: PlayersService
