@@ -17,5 +17,6 @@ class LevelsModel{
     var levelName: String? = null   //description_one en la base de datos
     @Column (name="Lvl_difficulty")
     var levelDifficulty: String? = null   //address
-    var Lvl_number: Long? = null
+    @Column (name = "Lvl_number")
+    var levelNumber: Long? = null
 }

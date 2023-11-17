@@ -17,8 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
+
+data class JSendResponse<T>(
+    val status: String,
+    val data: T? = null,
+    val message: String? = null
+)
+
 @RestController
-@RequestMapping("/LevelsModel")   //endpoint
+@RequestMapping("/api/levels")   //endpoint
 
 @CrossOrigin(methods = [RequestMethod.GET, RequestMethod.POST, RequestMethod.PATCH, RequestMethod.PUT, RequestMethod.DELETE])
 
@@ -27,33 +34,46 @@ class LevelsController {
     lateinit var modeloService: LevelsService
 
     @GetMapping
-    fun list ():List <LevelsModel>{
-        return modeloService.list()
+    fun list(): ResponseEntity<JSendResponse<List<LevelsModel>>> {
+        val levelsList = modeloService.list()
+        return ResponseEntity.ok(JSendResponse("success", levelsList))
     }
     //Peticiones post - Clase controller
     @PostMapping
-    fun save (@RequestBody modelo:LevelsModel):ResponseEntity<LevelsModel>{
-        return ResponseEntity(modeloService.save(modelo), HttpStatus.OK)
+    fun save(@RequestBody modelo: LevelsModel): ResponseEntity<JSendResponse<LevelsModel>> {
+        val savedModel = modeloService.save(modelo)
+        return ResponseEntity.status(HttpStatus.CREATED).body(JSendResponse("success", savedModel))
     }
     //clase controller - Petición Put
-    @PutMapping
-    fun update (@RequestBody modelo:LevelsModel):ResponseEntity<LevelsModel>{
-        return ResponseEntity(modeloService.update(modelo), HttpStatus.OK)
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody modelo: LevelsModel): ResponseEntity<JSendResponse<LevelsModel>> {
+        val updatedModel = modeloService.update(id, modelo)
+        return ResponseEntity.ok(JSendResponse("success", updatedModel))
     }
     //clase  controller-Petiicon Patch
-    @PatchMapping
-    fun updateName (@RequestBody modelo:LevelsModel):ResponseEntity<LevelsModel>{
-        return ResponseEntity(modeloService.updateName(modelo), HttpStatus.OK)//error
+    @PatchMapping("/{id}")
+    fun updateName(@PathVariable id: Long, @RequestBody levelName: String): ResponseEntity<JSendResponse<LevelsModel>> {
+        val updatedModel = modeloService.updateName(id, levelName)
+        return ResponseEntity.ok(JSendResponse("success", updatedModel))
     }
     //clase  controller - Petición Delete
-    @DeleteMapping("/delete/{id}")
-    fun delete (@PathVariable("id") id: Long):Boolean?{
-        return modeloService.delete(id)
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Long): ResponseEntity<JSendResponse<String>> {
+        val deleted = modeloService.delete(id)
+        return if (deleted) {
+            ResponseEntity.ok(JSendResponse("success", "Level deleted successfully"))
+        } else {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(JSendResponse("fail", null, "Level not found"))
+        }
     }
     //GET BY ID Clase Controller
     @GetMapping("/{id}")
-    fun listById (@PathVariable("id") id: Long): ResponseEntity<*>{
-        return ResponseEntity(modeloService.listById (id), HttpStatus.OK)
-
+    fun listById(@PathVariable id: Long): ResponseEntity<JSendResponse<LevelsModel>> {
+        val level = modeloService.listById(id)
+        return if (level != null) {
+            ResponseEntity.ok(JSendResponse("success", level))
+        } else {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(JSendResponse("fail", null, "Level not found"))
+        }
     }
 }

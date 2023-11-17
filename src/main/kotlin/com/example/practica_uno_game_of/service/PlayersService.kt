@@ -22,11 +22,11 @@ class PlayersService {
     fun save(players: Players): Players {
         //Comprobación de la clave foranea
         try {
-            levelsRepository.findById(players.levels_id)
-                ?: throw Exception("Id del cliente no encontradaa")
+            /*levelsRepository.findById(players.levels_id)
+                ?: throw Exception("Id del cliente no encontradaa")*/
             return playersRepository.save(players)
         }catch (ex : Exception){
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, ex.message, ex)
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, ex.message)
         }
     }
     //clase service -Petición put
@@ -56,5 +56,17 @@ class PlayersService {
     //GET BY ID clase service
     fun listById (id:Long?): Players?{
         return playersRepository.findById(id)
+    }
+
+    //Petición patch
+    fun updateName(modelo: Players): Players{
+        try {
+            var response = playersRepository.findById(modelo.id)?: throw Exception("element doesn't exist")
+            response.apply { playerName = modelo.playerName }
+            return playersRepository.save(response)
+        }catch (ex: Exception){
+            throw  ResponseStatusException(HttpStatus.NOT_FOUND, ex.message)
+        }
+
     }
 }

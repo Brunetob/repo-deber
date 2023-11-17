@@ -43,7 +43,7 @@ class PlayersController {
     //clase  controller-Petiicon Patch
     @PatchMapping
     fun updateName (@RequestBody modelo: Players): ResponseEntity<Players> {
-        return ResponseEntity(playersService.update(modelo), HttpStatus.OK)
+        return ResponseEntity(playersService.updateName(modelo), HttpStatus.OK)
     }
     //clase  controller - Petición Delete
     @DeleteMapping("/delete/{id}")
